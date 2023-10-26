@@ -129,6 +129,25 @@ func TestMatcher(t *testing.T) {
 	check(`^(.*)$`, "a\000c", "a\000c", "a\000c")
 }
 
+func TestUnicodeAndClass(t *testing.T) {
+	// Simple unicode works
+	re := MustCompile(`ййй`, 0)
+	m := re.NewMatcherString(`ййй`, 0)
+	if !m.Matches {
+		t.Error("Failed to find any matches")
+	}
+
+	// But with char class not working...
+	re = MustCompile(`й[й]й`, 0)
+	m = re.NewMatcherString(`ййй`, 0)
+	t.Logf("M: %v\n", m)
+	t.Logf("M.Index: %v\n", m.Index())
+
+	if !m.Matches {
+		t.Error("Failed to find any matches")
+	}
+}
+
 func TestPartial(t *testing.T) {
 	re := MustCompile(`^abc`, 0)
 
