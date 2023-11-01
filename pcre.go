@@ -488,11 +488,19 @@ func (re *Regexp) Study(flags int) error {
 		return errors.New(C.GoString(err))
 	}
 
-	defer C.free(unsafe.Pointer(extra))
+	defer func() {
+		if extra != nil {
+			C.free(unsafe.Pointer(extra))
+		}
+	}()
 
-	var _extra C.struct_pcre_extra
-	size := unsafe.Sizeof(_extra) // Fixed size
-	re.extra = C.GoBytes(unsafe.Pointer(extra), C.int(size))
+	if extra == nil {
+		re.extra = nil
+	} else {
+		var _extra C.struct_pcre_extra
+		size := unsafe.Sizeof(_extra) // Fixed size
+		re.extra = C.GoBytes(unsafe.Pointer(extra), C.int(size))
+	}
 
 	return nil
 }
