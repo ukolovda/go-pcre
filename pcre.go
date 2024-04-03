@@ -732,7 +732,6 @@ func (m *Matcher) MatchStringWFlags(subject string, flags int) bool {
 }
 
 func checkMatch(rc int) (bool, error) {
-	pref := "%d, pcre_exec: "
 
 	switch {
 	case rc >= 0 || rc == ERROR_PARTIAL:
@@ -740,23 +739,23 @@ func checkMatch(rc int) (bool, error) {
 	case rc == ERROR_NOMATCH:
 		return false, nil
 	case rc == ERROR_NULL:
-		return false, fmt.Errorf(pref+"one or more variables passed to pcre_exec == NULL", ERROR_NULL)
+		return false, fmt.Errorf("%d, pcre_exec: one or more variables passed to pcre_exec == NULL", int(ERROR_NULL))
 	case rc == ERROR_BADOPTION:
-		return false, fmt.Errorf(pref+"An unrecognized bit was set in the options argument", ERROR_BADOPTION)
+		return false, fmt.Errorf("%d, pcre_exec: An unrecognized bit was set in the options argument", int(ERROR_BADOPTION))
 	case rc == ERROR_BADMAGIC:
-		return false, fmt.Errorf(pref+"invalid option flag", ERROR_BADMAGIC)
+		return false, fmt.Errorf("%d, pcre_exec: invalid option flag", int(ERROR_BADMAGIC))
 	case rc == ERROR_UNKNOWN_OPCODE:
-		return false, fmt.Errorf(pref+"an unknown item was encountered in the compiled pattern", ERROR_UNKNOWN_OPCODE)
+		return false, fmt.Errorf("%d, pcre_exec: an unknown item was encountered in the compiled pattern", int(ERROR_UNKNOWN_OPCODE))
 	case rc == ERROR_NOMEMORY:
-		return false, fmt.Errorf(pref+"match limit", ERROR_NOMEMORY)
+		return false, fmt.Errorf("%d, pcre_exec: match limit", int(ERROR_NOMEMORY))
 	case rc == ERROR_MATCHLIMIT:
-		return false, fmt.Errorf(pref+"backtracking (match) limit was reached", ERROR_MATCHLIMIT)
+		return false, fmt.Errorf("%d, pcre_exec: backtracking (match) limit was reached", int(ERROR_MATCHLIMIT))
 	case rc == ERROR_BADUTF8:
-		return false, fmt.Errorf(pref+"string that contains an invalid UTF-8 byte sequence was passed as a subject", ERROR_BADUTF8)
+		return false, fmt.Errorf("%d, pcre_exec: string that contains an invalid UTF-8 byte sequence was passed as a subject", int(ERROR_BADUTF8))
 	case rc == ERROR_RECURSIONLIMIT:
-		return false, fmt.Errorf(pref+"recursion limit", ERROR_RECURSIONLIMIT)
+		return false, fmt.Errorf("%d, pcre_exec: recursion limit", int(ERROR_RECURSIONLIMIT))
 	case rc == ERROR_JIT_STACKLIMIT:
-		return false, fmt.Errorf(pref+"error JIT stack limit", ERROR_JIT_STACKLIMIT)
+		return false, fmt.Errorf("%d, pcre_exec: error JIT stack limit", int(ERROR_JIT_STACKLIMIT))
 	case rc == ERROR_INTERNAL:
 		panic("pcre_exec: INTERNAL ERROR")
 	case rc == ERROR_BADCOUNT:
