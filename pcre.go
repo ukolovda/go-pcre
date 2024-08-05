@@ -486,7 +486,8 @@ func (re *Regexp) Study(flags int) error {
 
 	var _extra C.struct_pcre_extra
 	size := unsafe.Sizeof(_extra) // Fixed size
-	re.extra = C.GoBytes(unsafe.Pointer(extra), C.int(size))
+	tmpExtra := C.GoBytes(unsafe.Pointer(extra), C.int(size))
+	copy(re.extra, tmpExtra) // Make a copy (protect from GC call)
 
 	return nil
 }
