@@ -72,6 +72,13 @@ import (
 	"unsafe"
 )
 
+var flagsReg Regexp
+
+func init() {
+	flagsReg = MustCompile("^\\(\\?[a-zA-Z]+?\\)", 0)
+	_ = flagsReg.Study(0)
+}
+
 // Config function returns information about libpcre configuration.
 // Function pass flag f to C.pcre_config() func, and convert returned
 // value to string type.
@@ -190,11 +197,10 @@ func pcreCaptureNames(ptr *C.pcre) []CaptureName {
 // Supported symbols i=CASELESS; m=MULTILINE; s=DOTALL; U=UNGREEDY; J=DUPNAMES;
 // x=EXTENDED; X=EXTRA; D=DOLLAR_ENDONLY; u=UTF8|UCP;
 func ParseFlags(ptr string) (string, int) {
-	fReg := MustCompile("^\\(\\?[a-zA-Z]+?\\)", 0)
 	flags := 0
 
-	for fStr := fReg.FindString(ptr, 0); fStr != ""; ptr = ptr[len(fStr):] {
-		fStr = fReg.FindString(ptr, 0)
+	for fStr := flagsReg.FindString(ptr, 0); fStr != ""; ptr = ptr[len(fStr):] {
+		fStr = flagsReg.FindString(ptr, 0)
 
 		if strings.Contains(fStr, "i") {
 			flags |= CASELESS
